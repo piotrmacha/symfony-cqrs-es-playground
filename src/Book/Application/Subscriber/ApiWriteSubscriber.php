@@ -55,6 +55,11 @@ class ApiWriteSubscriber implements EventSubscriberInterface
         $result = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
+        if (!in_array($method, ['POST', 'PUT', 'PATH'])) {
+            // we don't want to look for a command to queries
+            return;
+        }
+
         $commandClass = $this->getCommand($result, $method);
         $command = new $commandClass($result);
 
