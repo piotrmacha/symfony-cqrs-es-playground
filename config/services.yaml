@@ -24,3 +24,9 @@ services:
     # Command Handlers
     App\Book\Command\CreateBook\CreateBookCommandHandler:
       public: true
+
+    # Query Handlers
+    App\Book\Query\BookItem\BookItemQueryHandler:
+      public: true
+    App\Book\Query\BookCollection\BookCollectionQueryHandler:
+      public: true

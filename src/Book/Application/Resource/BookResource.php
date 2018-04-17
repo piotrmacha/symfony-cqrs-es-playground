@@ -4,14 +4,18 @@ namespace App\Book\Application\Resource;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Book\Command\CreateBook\CreateBookCommand;
+use App\Book\Query\BookCollection\BookCollectionQuery;
+use App\Book\Query\BookItem\BookItemQuery;
+use App\Shared\Api\CollectionQueryAwareResource;
 use App\Shared\Api\CommandAwareResource;
 use App\Shared\Api\ImmutableResourceCommandList;
+use App\Shared\Api\ItemQueryAwareResource;
 use App\Shared\Api\ResourceCommandListBuilder;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BookResource implements CommandAwareResource
+class BookResource implements ItemQueryAwareResource, CollectionQueryAwareResource, CommandAwareResource
 {
     /**
      * @ApiProperty(identifier=true)
@@ -31,6 +35,16 @@ class BookResource implements CommandAwareResource
      * @var string
      */
     private $author;
+
+    public static function itemQueryClass(): string
+    {
+        return BookItemQuery::class;
+    }
+
+    public static function collectionQueryClass(): string
+    {
+        return BookCollectionQuery::class;
+    }
 
     public function commandList(): ImmutableResourceCommandList
     {

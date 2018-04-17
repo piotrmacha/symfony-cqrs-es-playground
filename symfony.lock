@@ -14,6 +14,9 @@
     "beberlei/assert": {
         "version": "v2.9.5"
     },
+    "clue/block-react": {
+        "version": "v1.2.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -112,6 +115,15 @@
     },
     "ramsey/uuid": {
         "version": "3.7.3"
+    },
+    "react/event-loop": {
+        "version": "v0.5.1"
+    },
+    "react/promise": {
+        "version": "v2.5.1"
+    },
+    "react/promise-timer": {
+        "version": "v1.2.1"
     },
     "symfony/asset": {
         "version": "v4.0.8"
