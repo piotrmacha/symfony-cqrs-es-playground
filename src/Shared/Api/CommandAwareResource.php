@@ -4,5 +4,5 @@ namespace App\Shared\Api;
 
 interface CommandAwareResource
 {
-    public function commandList(): ImmutableResourceCommandList;
+    public static function commandClassList(): ImmutableResourceCommandList;
 }

@@ -88,7 +88,7 @@ class ApiCommandSubscriber implements EventSubscriberInterface
                 )
             );
         }
-        $commandList = $result->commandList();
+        $commandList = $result::commandClassList();
 
         $method = strtolower($method);
         if (!$commandList->has($method)) {

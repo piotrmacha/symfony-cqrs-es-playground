@@ -46,7 +46,7 @@ class BookResource implements ItemQueryAwareResource, CollectionQueryAwareResour
         return BookCollectionQuery::class;
     }
 
-    public function commandList(): ImmutableResourceCommandList
+    public static function commandClassList(): ImmutableResourceCommandList
     {
         return (new ResourceCommandListBuilder())
             ->withPost(CreateBookCommand::class)
