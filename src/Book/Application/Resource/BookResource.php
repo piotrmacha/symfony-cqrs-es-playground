@@ -1,13 +1,17 @@
 <?php
 
-namespace App\Book\Application\Dto;
+namespace App\Book\Application\Resource;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
+use App\Book\Command\CreateBook\CreateBookCommand;
+use App\Shared\Api\CommandAwareResource;
+use App\Shared\Api\ImmutableResourceCommandList;
+use App\Shared\Api\ResourceCommandListBuilder;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Book
+class BookResource implements CommandAwareResource
 {
     /**
      * @ApiProperty(identifier=true)
@@ -27,6 +31,13 @@ class Book
      * @var string
      */
     private $author;
+
+    public function commandList(): ImmutableResourceCommandList
+    {
+        return (new ResourceCommandListBuilder())
+            ->withPost(CreateBookCommand::class)
+            ->build();
+    }
 
     /**
      * @return UuidInterface

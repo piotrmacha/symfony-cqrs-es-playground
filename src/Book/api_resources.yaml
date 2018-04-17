@@ -1,5 +1,5 @@
 resources:
-  'App\Book\Application\Dto\Book':
+  'App\Book\Application\Resource\BookResource':
     itemOperations:
       get:
         method: GET

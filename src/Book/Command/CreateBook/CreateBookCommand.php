@@ -2,16 +2,16 @@
 
 namespace App\Book\Command\CreateBook;
 
-use App\Book\Application\Dto\Book;
+use App\Book\Application\Resource\BookResource;
 
 class CreateBookCommand
 {
     /**
-     * @var Book
+     * @var BookResource
      */
     private $book;
 
-    public function __construct(Book $book)
+    public function __construct(BookResource $book)
     {
         $this->book = $book;
     }

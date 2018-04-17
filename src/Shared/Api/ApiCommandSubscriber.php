@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Shared\Subscriber;
+namespace App\Shared\Api;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Book\Application\Dto\Book;
+use App\Book\Application\Resource\BookResource;
 use App\Book\Command\CreateBook\CreateBookCommand;
 use Prooph\ServiceBus\CommandBus;
 use Prooph\ServiceBus\Exception\MessageDispatchException;
@@ -62,7 +62,7 @@ class ApiCommandSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $commandClass = $this->getCommand($result, $method);
+        $commandClass = $this->getCommandClass($result, $method);
         $command = new $commandClass($result);
 
         try {
@@ -77,26 +77,30 @@ class ApiCommandSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function getCommand($result, string $method)
+    private function getCommandClass($result, string $method)
     {
-        $commands = [
-            Book::class => [
-                'post' => CreateBookCommand::class
-            ]
-        ];
-
-        $class = get_class($result);
-
-        if (!array_key_exists($class, $commands)) {
-            throw new \RuntimeException('Command for given resource does not exist');
+        if (!($result instanceof CommandAwareResource)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Resource "%s" must implement "%s" in order to perform write operations on it',
+                    get_class($result),
+                    CommandAwareResource::class
+                )
+            );
         }
+        $commandList = $result->commandList();
 
         $method = strtolower($method);
-        $methods = $commands[$class];
-        if (!array_key_exists($method, $methods)) {
-            throw new \RuntimeException('Command for given resource does not exist');
+        if (!$commandList->has($method)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Resource "%s" does not register any commands for "%s" method',
+                    get_class($result),
+                    $method
+                )
+            );
         }
 
-        return $methods[$method];
+        return $commandList->get($method);
     }
 }
