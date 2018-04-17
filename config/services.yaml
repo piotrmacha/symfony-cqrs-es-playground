@@ -15,7 +15,7 @@ services:
 
     Prooph\ServiceBus\CommandBus:
       factory: ['App\Shared\CommandBus\CommandBusFactory', 'createCommandBus']
-      arguments: ['@service_container']
+      arguments: ['@App\Shared\CommandBus\CommandQueryAutoDiscoveryRouter']
 
     # Command Handlers
     App\Book\Command\CreateBook\CreateBookCommandHandler:
