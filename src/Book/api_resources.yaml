@@ -1,0 +1,15 @@
+resources:
+  'App\Book\Application\Dto\Book':
+    itemOperations:
+      get:
+        method: GET
+        path: '/book/{id}'
+      put:
+        method: PUT
+        path: '/book/{id}'
+    collectionOperations:
+      get:
+        path: '/book'
+      post:
+        method: POST
+        path: '/book'
