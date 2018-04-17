@@ -4,12 +4,14 @@ namespace App\Book\Application\Dto;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Book
 {
     /**
      * @ApiProperty(identifier=true)
+     * @Groups("read")
      * @var UuidInterface
      */
     private $id;
