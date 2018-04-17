@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Book\Application\Subscriber;
+namespace App\Shared\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Book\Application\Dto\Book;
 use App\Book\Command\CreateBook\CreateBookCommand;
 use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\Exception\MessageDispatchException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class ApiWriteSubscriber implements EventSubscriberInterface
+class ApiCommandSubscriber implements EventSubscriberInterface
 {
     /**
      * @var CommandBus
@@ -63,7 +65,16 @@ class ApiWriteSubscriber implements EventSubscriberInterface
         $commandClass = $this->getCommand($result, $method);
         $command = new $commandClass($result);
 
-        $this->commandBus->dispatch($command);
+        try {
+            $this->commandBus->dispatch($command);
+        } catch (MessageDispatchException $exception) {
+            // API Platform shows only the newest exception message, so we need to rethrow the second in order
+            $previous = $exception->getPrevious();
+            if ($previous instanceof \Exception) {
+                throw $previous;
+            }
+            throw $exception;
+        }
     }
 
     private function getCommand($result, string $method)

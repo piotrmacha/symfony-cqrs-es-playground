@@ -13,8 +13,12 @@ services:
     App\:
       resource: '../src/*'
 
+    # Prooph
     Prooph\ServiceBus\CommandBus:
-      factory: ['App\Shared\CommandBus\CommandBusFactory', 'createCommandBus']
+      factory: ['App\Shared\CommandBus\CommandQueryBusFactory', 'createCommandBus']
+      arguments: ['@App\Shared\CommandBus\CommandQueryAutoDiscoveryRouter']
+    Prooph\ServiceBus\QueryBus:
+      factory: ['App\Shared\CommandBus\CommandQueryBusFactory', 'createQueryBus']
       arguments: ['@App\Shared\CommandBus\CommandQueryAutoDiscoveryRouter']
 
     # Command Handlers
