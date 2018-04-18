@@ -4,6 +4,7 @@ namespace App\Shared\Api;
 
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\Exception\ResourceClassNotSupportedException;
+use App\Shared\Collection\PaginatedCollection;
 use function Clue\React\Block\await;
 use Prooph\ServiceBus\Exception\MessageDispatchException;
 use Prooph\ServiceBus\QueryBus;
@@ -53,7 +54,18 @@ class ApiQueryCollectionProvider implements ContextAwareCollectionDataProviderIn
 
         try {
             // Async code is fine until you need to integrate it with synchronous libraries
-            return await($this->queryBus->dispatch($query), Factory::create());
+            $result = await($this->queryBus->dispatch($query), Factory::create());
+
+            if ($result instanceof PaginatedCollection) {
+                $page = 1;
+                if (array_key_exists('page', $filters)) {
+                    $page = (int)$filters['page'];
+                }
+
+                $result = new PaginatedResponse($result, $page);
+            }
+
+            return $result;
         } catch (MessageDispatchException $exception) {
             // API Platform shows only the newest exception message, so we need to rethrow the second in order
             $previous = $exception->getPrevious();
